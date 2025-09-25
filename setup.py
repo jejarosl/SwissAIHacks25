@@ -25,7 +25,7 @@ setup(
             'swisshacks-validate=swisshacks.test_validations:main',
         ],
     },
-    author="3plus1",
-    description="SwissHacks package for Julius Baer hackathon",
+    author="BestTeam",
+    description="SwissHacks package for Swiss AI hackathon",
     python_requires=">=3.8",
 )

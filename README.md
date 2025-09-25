@@ -1,12 +1,6 @@
 # 3plus1 at SwissHacks 2025 - Winning solution
 
-SwissHacks 2025 took place on April 11-13, 2025, in Zurich, with 54 great teams competing.
-
-Our team took home:
-
-- 🥇 The Overall Winner title
-- 💼 The Julius Baer Challenge
-- 🎉 The Audience Prize
+SwissHacks 2025 took place on September 26-27, 2025, in Zurich.
 
 ![3plus1.jpg](./3plus1.jpg)
 
