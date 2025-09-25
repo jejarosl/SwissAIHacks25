@@ -1,0 +1,9 @@
+requests>=2.25.0
+python-dotenv>=0.15.0
+boto3>=1.17.0
+PyPDF2>=2.0.0
+python-docx>=0.8.11
+dataclasses-json>=0.5.2
+pillow>=8.0.0
+easyocr>=1.4.0
+openai>=0.27.0

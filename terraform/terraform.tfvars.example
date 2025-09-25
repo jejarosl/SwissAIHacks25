@@ -1,0 +1,12 @@
+aws_region     = "eu-central-1"
+environment    = "dev"
+project_name   = "swisshacks"
+db_username    = "REPLACE_WITH_DB_USERNAME"    # Don't commit actual credentials
+db_password    = "REPLACE_WITH_DB_PASSWORD"    # Don't commit actual credentials
+aws_access_key = "REPLACE_WITH_ACCESS_KEY_ID"  # Don't commit actual credentials
+aws_secret_key = "REPLACE_WITH_SECRET_KEY"     # Don't commit actual credentials
+
+# GitHub Actions OIDC settings
+create_oidc_provider = false               # Set to true to enable GitHub Actions OIDC auth
+github_org           = "your-github-org"   # GitHub organization name
+github_repo          = "swisshacks"        # GitHub repository name

@@ -1,0 +1,5 @@
+1. Names must be consistent across all documents
+2. Passport number must match between passport and account documents
+3. Address information must be consistent
+4. Date formats must be valid and must conform to common sense logic. Today is 6th of April 2025.
+5. Ensure there are no logical nor chronological gaps in education fields. For example can cannot complete university within 6 years after completing secondary school. Also validate graduation match across documents.

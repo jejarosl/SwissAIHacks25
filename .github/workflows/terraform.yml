@@ -1,0 +1,71 @@
+name: Terraform CI/CD
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform.yml'
+  workflow_dispatch:
+
+env:
+  AWS_REGION: eu-central-1
+  TF_VERSION: 1.11.1
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Validate
+        working-directory: ./terraform
+        run: terraform validate
+
+      - name: Create terraform.tfvars
+        working-directory: ./terraform
+        run: |
+          cat > terraform.tfvars << EOF
+          aws_region = "${{ env.AWS_REGION }}"
+          environment = "dev"
+          project_name = "swisshacks"
+          aws_access_key = "${{ secrets.AWS_ACCESS_KEY_ID }}"
+          aws_secret_key = "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+          db_username = "${{ secrets.DB_USERNAME }}"
+          db_password = "${{ secrets.DB_PASSWORD }}"
+          create_oidc_provider = true
+          github_org = "${{ github.repository_owner }}"
+          github_repo = "swisshacks"
+          EOF
+
+      - name: Terraform Plan
+        working-directory: ./terraform
+        run: terraform plan -var-file=terraform.tfvars
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply -auto-approve -var-file=terraform.tfvars
