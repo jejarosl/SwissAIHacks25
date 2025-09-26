@@ -53,3 +53,22 @@ export interface Document {
 }
 
 export type ViewMode = 'prep' | 'live' | 'post';
+
+export type ViewMode = 'dashboard' | 'prep' | 'live' | 'post';
+
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  type: 'meeting' | 'call' | 'review' | 'presentation';
+  format: 'in-person' | 'video' | 'phone';
+  date: string;
+  time: string;
+  duration: number; // in minutes
+  participants: Participant[];
+  status: 'scheduled' | 'confirmed' | 'in-progress' | 'completed' | 'cancelled';
+  location?: string;
+  description?: string;
+  priority: 'low' | 'medium' | 'high';
+  hasPrep?: boolean;
+  hasDocuments?: boolean;
+}</parameter>

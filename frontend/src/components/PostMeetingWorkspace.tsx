@@ -8,16 +8,22 @@ import {
 } from 'lucide-react';
 import { mockTasks, mockDocuments } from '../utils/mockData';
 import { Task, Document } from '../types';
+import VoiceNoteRecorder from './VoiceNoteRecorder';
+import VoiceNotesList from './VoiceNotesList';
+import VoiceChat from './VoiceChat';
+import { VoiceNote } from '../utils/voiceUtils';
 
 const PostMeetingWorkspace: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>(mockTasks);
   const [documents] = useState<Document[]>(mockDocuments);
+  const [voiceNotes, setVoiceNotes] = useState<VoiceNote[]>([]);
   const [language, setLanguage] = useState('English');
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([
     { id: '1', message: 'What tasks remain from the last two meetings?', response: 'Based on previous meetings, you have 3 pending tasks: ESG proposal preparation (due Jan 24), portfolio diversification review (due Jan 26), and client risk profile update (completed).' }
   ]);
   const [isDragging, setIsDragging] = useState(false);
+  const [activeTab, setActiveTab] = useState<'chat' | 'voice'>('chat');
 
   const taskColumns = {
     'todo': tasks.filter(task => task.status === 'todo'),
@@ -64,6 +70,31 @@ const PostMeetingWorkspace: React.FC = () => {
     setChatMessage('');
   };
 
+  const handleSaveVoiceNote = (voiceNote: VoiceNote) => {
+    setVoiceNotes(prev => [voiceNote, ...prev]);
+  };
+
+  const handleDeleteVoiceNote = (id: string) => {
+    setVoiceNotes(prev => prev.filter(note => note.id !== id));
+  };
+
+  const handleExportVoiceNotes = (notes: VoiceNote[]) => {
+    // Create a summary document of all voice notes
+    const summary = notes.map(note => ({
+      timestamp: new Date(note.timestamp).toLocaleString(),
+      duration: `${Math.floor(note.duration / 60)}:${(note.duration % 60).toString().padStart(2, '0')}`,
+      transcript: note.transcript,
+      tags: note.tags?.join(', ') || 'None'
+    }));
+    
+    const blob = new Blob([JSON.stringify(summary, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `voice-notes-export-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
   const handleFileUpload = (files: FileList) => {
     console.log('Files uploaded:', files);
     // Simulate indexing into knowledge base
@@ -142,6 +173,29 @@ const PostMeetingWorkspace: React.FC = () => {
               <span>Download PDF Report</span>
             </button>
           </motion.div>
+
+          {/* Voice Notes Recorder */}
+          <VoiceNoteRecorder 
+            onSave={handleSaveVoiceNote}
+            meetingId="meeting-123"
+          />
+
+          {/* Voice Notes List */}
+          {voiceNotes.length > 0 && (
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
+            >
+              <h3 className="font-semibold text-gray-900 mb-4">Saved Voice Notes ({voiceNotes.length})</h3>
+              <VoiceNotesList 
+                voiceNotes={voiceNotes}
+                onDelete={handleDeleteVoiceNote}
+                onExport={handleExportVoiceNotes}
+              />
+            </motion.div>
+          )}
 
           {/* Document Upload Widget */}
           <motion.div 
@@ -322,21 +376,44 @@ const PostMeetingWorkspace: React.FC = () => {
         </div>
       </div>
 
-      {/* Advisor Chatbot Widget */}
+      {/* Enhanced Assistant Widget with Voice */}
       <motion.div 
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="fixed bottom-6 right-6 w-80 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
+        className="fixed bottom-6 right-6 w-96 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden"
       >
         <div className="p-4 bg-red-600 text-white">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
             <MessageCircle className="h-5 w-5" />
-            <span className="font-medium">Advisory Assistant</span>
+              <span className="font-medium">Advisory Assistant</span>
+            </div>
+            
+            <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`px-3 py-1 rounded text-xs transition-colors ${
+                  activeTab === 'chat' ? 'bg-white text-red-600' : 'hover:bg-red-700'
+                }`}
+              >
+                Chat
+              </button>
+              <button
+                onClick={() => setActiveTab('voice')}
+                className={`px-3 py-1 rounded text-xs transition-colors ${
+                  activeTab === 'voice' ? 'bg-white text-red-600' : 'hover:bg-red-700'
+                }`}
+              >
+                Voice
+              </button>
+            </div>
           </div>
         </div>
         
-        <div className="p-4 max-h-64 overflow-y-auto space-y-3">
+        {activeTab === 'chat' ? (
+          <>
+            <div className="p-4 max-h-64 overflow-y-auto space-y-3">
           {chatHistory.map((chat) => (
             <div key={chat.id} className="space-y-2">
               <div className="text-right">
@@ -351,9 +428,9 @@ const PostMeetingWorkspace: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
+            </div>
         
-        <form onSubmit={handleChatSubmit} className="p-4 border-t border-gray-100">
+            <form onSubmit={handleChatSubmit} className="p-4 border-t border-gray-100">
           <div className="flex items-center space-x-2">
             <input
               type="text"
@@ -369,7 +446,13 @@ const PostMeetingWorkspace: React.FC = () => {
               <Send className="h-4 w-4" />
             </button>
           </div>
-        </form>
+            </form>
+          </>
+        ) : (
+          <div className="h-80">
+            <VoiceChat />
+          </div>
+        )}
       </motion.div>
     </div>
   );

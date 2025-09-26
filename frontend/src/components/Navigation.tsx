@@ -20,7 +20,11 @@ const Navigation: React.FC<NavigationProps> = ({
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
 
-  const tabs = [
+  // Main dashboard tab
+  const dashboardTab = { id: 'dashboard' as ViewMode, label: 'Dashboard', description: 'Overview & Calendar' };
+  
+  // Meeting-specific tabs (only show when an event is selected)
+  const meetingTabs = [
     { id: 'prep' as ViewMode, label: 'Pre-Meeting', description: 'Preparation & Planning' },
     { id: 'live' as ViewMode, label: 'Live Meeting', description: 'Active Session' },
     { id: 'post' as ViewMode, label: 'Post-Meeting', description: 'Follow-up & Tasks' }
@@ -43,9 +47,11 @@ const Navigation: React.FC<NavigationProps> = ({
             className="flex items-center space-x-8"
           >
             <div className="flex-shrink-0 flex items-center space-x-3">
-              <div className="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">UBS</span>
-              </div>
+              <img 
+                src="/ubs-logo.svg" 
+                alt="UBS Logo" 
+                className="h-8 w-auto"
+              />
               <h1 className="text-xl font-semibold text-gray-900">
                 Client Advisory Intelligence
               </h1>
@@ -53,28 +59,56 @@ const Navigation: React.FC<NavigationProps> = ({
             
             {/* Navigation Tabs */}
             <div className="flex space-x-1">
-              {tabs.map((tab, index) => (
-                <motion.button
-                  key={tab.id}
-                  onClick={() => onViewChange(tab.id)}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    currentView === tab.id
-                      ? 'bg-red-600 text-white shadow-md'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex flex-col items-center">
-                    <span>{tab.label}</span>
-                    <span className={`text-xs ${
-                      currentView === tab.id ? 'text-red-200' : 'text-gray-400'
-                    }`}>
-                      {tab.description}
-                    </span>
-                  </div>
-                </motion.button>
-              ))}
+              {/* Always show Dashboard tab */}
+              <motion.button
+                key={dashboardTab.id}
+                onClick={() => onViewChange(dashboardTab.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  currentView === dashboardTab.id
+                    ? 'bg-red-600 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span>{dashboardTab.label}</span>
+                  <span className={`text-xs ${
+                    currentView === dashboardTab.id ? 'text-red-200' : 'text-gray-400'
+                  }`}>
+                    {dashboardTab.description}
+                  </span>
+                </div>
+              </motion.button>
+              
+              {/* Show meeting tabs only when not on dashboard */}
+              {currentView !== 'dashboard' && (
+                <>
+                  <div className="w-px h-8 bg-gray-200 mx-2 self-center" />
+                  {meetingTabs.map((tab) => (
+                    <motion.button
+                      key={tab.id}
+                      onClick={() => onViewChange(tab.id)}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                        currentView === tab.id
+                          ? 'bg-red-600 text-white shadow-md'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                      }`}
+                    >
+                      <div className="flex flex-col items-center">
+                        <span>{tab.label}</span>
+                        <span className={`text-xs ${
+                          currentView === tab.id ? 'text-red-200' : 'text-gray-400'
+                        }`}>
+                          {tab.description}
+                        </span>
+                      </div>
+                    </motion.button>
+                  ))}
+                </>
+              )}
             </div>
           </motion.div>
 

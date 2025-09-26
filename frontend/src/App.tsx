@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
+import Dashboard from './components/Dashboard';
 import PreMeetingDashboard from './components/PreMeetingDashboard';
 import LiveMeetingView from './components/LiveMeetingView';
 import PostMeetingWorkspace from './components/PostMeetingWorkspace';
-import { ViewMode } from './types';
+import { ViewMode, CalendarEvent } from './types';
 
 function App() {
-  const [currentView, setCurrentView] = useState<ViewMode>('prep');
+  const [currentView, setCurrentView] = useState<ViewMode>('dashboard');
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [notificationCount] = useState(3);
+
+  const handleEventSelect = (event: CalendarEvent) => {
+    setSelectedEvent(event);
+    setCurrentView('prep'); // Default to prep view when event is selected
+  };
 
   const renderCurrentView = () => {
     const viewVariants = {
@@ -18,6 +25,19 @@ function App() {
     };
 
     switch (currentView) {
+      case 'dashboard':
+        return (
+          <motion.div
+            key="dashboard"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <Dashboard onEventSelect={handleEventSelect} />
+          </motion.div>
+        );
       case 'prep':
         return (
           <motion.div
