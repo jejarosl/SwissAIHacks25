@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, Clock, Users, MapPin, FileText, AlertCircle, 
-  ChevronLeft, ChevronRight, Plus, Filter, Search,
-  Video, Phone, Presentation, FileCheck, Star
-} from 'lucide-react';
+import { Calendar, Clock, Users, MapPin, FileText, AlertCircle, ChevronLeft, ChevronRight, Plus, Filter, Search, Video, Phone, Presentation, FileCheck, Star, Send, Upload, CreditCard as Edit, UserPlus, TrendingUp, Bell } from 'lucide-react';
 import { CalendarEvent, ViewMode } from '../types';
 import { mockCalendarEvents, mockTasks } from '../utils/mockData';
 
@@ -168,6 +164,64 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
         </div>
       </div>
 
+      {/* Quick Actions Panel */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+          <p className="text-sm text-gray-500">Common advisor workflows</p>
+        </div>
+
+        {/* Primary Actions Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
+          {[
+            { icon: Plus, label: 'Schedule Meeting', color: 'bg-red-600 hover:bg-red-700', action: () => console.log('Schedule meeting') },
+            { icon: Edit, label: 'Create Task', color: 'bg-blue-600 hover:bg-blue-700', action: () => console.log('Create task') },
+            { icon: UserPlus, label: 'Add Client', color: 'bg-green-600 hover:bg-green-700', action: () => console.log('Add client') },
+            { icon: Upload, label: 'Upload Document', color: 'bg-purple-600 hover:bg-purple-700', action: () => console.log('Upload document') },
+            { icon: Send, label: 'Send Email', color: 'bg-orange-600 hover:bg-orange-700', action: () => console.log('Send email') },
+            { icon: TrendingUp, label: 'Generate Report', color: 'bg-indigo-600 hover:bg-indigo-700', action: () => console.log('Generate report') }
+          ].map((action, index) => (
+            <motion.button
+              key={action.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={action.action}
+              className={`flex flex-col items-center space-y-2 p-4 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${action.color}`}
+            >
+              <action.icon className="h-6 w-6" />
+              <span className="text-sm font-medium text-center">{action.label}</span>
+            </motion.button>
+          ))}
+        </div>
+
+        {/* Secondary Actions */}
+        <div className="flex flex-wrap gap-2">
+          {[
+            'Add Note',
+            'Set Reminder', 
+            'View Documents',
+            'Contact Client'
+          ].map((action) => (
+            <motion.button
+              key={action}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              {action}
+            </motion.button>
+          ))}
+        </div>
+      </motion.div>
+
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Statistics Cards */}
         <div className="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -204,16 +258,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
                 <p className="text-2xl font-bold text-blue-600">
                   {events.filter(event => {
                     const eventDate = new Date(event.date);
-                    const startOfWeek = new Date(today);
-                    startOfWeek.setDate(today.getDate() - today.getDay());
-                    const endOfWeek = new Date(startOfWeek);
-                    endOfWeek.setDate(startOfWeek.getDate() + 6);
-                    return eventDate >= startOfWeek && eventDate <= endOfWeek;
+                    const weekStart = new Date(today);
+                    weekStart.setDate(today.getDate() - today.getDay());
+                    const weekEnd = new Date(weekStart);
+                    weekEnd.setDate(weekStart.getDate() + 6);
+                    return eventDate >= weekStart && eventDate <= weekEnd;
                   }).length}
                 </p>
               </div>
               <div className="p-3 bg-blue-100 rounded-lg">
-                <Users className="h-6 w-6 text-blue-600" />
+                <Clock className="h-6 w-6 text-blue-600" />
               </div>
             </div>
           </motion.div>
@@ -226,13 +280,13 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">High Priority</p>
+                <p className="text-sm font-medium text-gray-600">Pending Tasks</p>
                 <p className="text-2xl font-bold text-orange-600">
-                  {events.filter(event => event.priority === 'high').length}
+                  {mockTasks.filter(task => task.status === 'pending').length}
                 </p>
               </div>
               <div className="p-3 bg-orange-100 rounded-lg">
-                <AlertCircle className="h-6 w-6 text-orange-600" />
+                <FileText className="h-6 w-6 text-orange-600" />
               </div>
             </div>
           </motion.div>
@@ -245,13 +299,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Pending Tasks</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {mockTasks.filter(task => task.status === 'todo').length}
-                </p>
+                <p className="text-sm font-medium text-gray-600">Active Clients</p>
+                <p className="text-2xl font-bold text-green-600">24</p>
               </div>
               <div className="p-3 bg-green-100 rounded-lg">
-                <FileText className="h-6 w-6 text-green-600" />
+                <Users className="h-6 w-6 text-green-600" />
               </div>
             </div>
           </motion.div>

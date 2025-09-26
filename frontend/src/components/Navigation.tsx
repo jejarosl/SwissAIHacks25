@@ -23,13 +23,15 @@ const Navigation: React.FC<NavigationProps> = ({
   // Main dashboard tab
   const dashboardTab = { id: 'dashboard' as ViewMode, label: 'Dashboard', description: 'Overview & Calendar' };
   
-  // Meeting-specific tabs (only show when an event is selected)
-  const meetingTabs = [
-    { id: 'prep' as ViewMode, label: 'Pre-Meeting', description: 'Preparation & Planning' },
-    { id: 'live' as ViewMode, label: 'Live Meeting', description: 'Active Session' },
-    { id: 'post' as ViewMode, label: 'Post-Meeting', description: 'Follow-up & Tasks' }
-  ];
-
+  // Tasks tab
+  const tasksTab = { id: 'tasks' as ViewMode, label: 'Tasks', description: 'Action Items & Follow-ups' };
+  
+  // Client database tab
+  const clientsTab = { id: 'clients' as ViewMode, label: 'Clients', description: 'Client Database & CRM' };
+  
+  // AI Assistant tab
+  const assistantTab = { id: 'assistant' as ViewMode, label: 'AI Assistant', description: 'Chat with AI Agent' };
+  
   const notifications = [
     { id: '1', message: 'Client asked for a proposal — not yet approved as task', time: '2 min ago', type: 'alert' },
     { id: '2', message: 'Meeting starting in 15 minutes', time: '10 min ago', type: 'reminder' },
@@ -48,7 +50,7 @@ const Navigation: React.FC<NavigationProps> = ({
           >
             <div className="flex-shrink-0 flex items-center space-x-3">
               <img 
-                src="/ubs-logo.svg" 
+                src="/imgs/ubs-logo-talendo.jpg" 
                 alt="UBS Logo" 
                 className="h-8 w-auto"
               />
@@ -81,34 +83,71 @@ const Navigation: React.FC<NavigationProps> = ({
                 </div>
               </motion.button>
               
-              {/* Show meeting tabs only when not on dashboard */}
-              {currentView !== 'dashboard' && (
-                <>
-                  <div className="w-px h-8 bg-gray-200 mx-2 self-center" />
-                  {meetingTabs.map((tab) => (
-                    <motion.button
-                      key={tab.id}
-                      onClick={() => onViewChange(tab.id)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                        currentView === tab.id
-                          ? 'bg-red-600 text-white shadow-md'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex flex-col items-center">
-                        <span>{tab.label}</span>
-                        <span className={`text-xs ${
-                          currentView === tab.id ? 'text-red-200' : 'text-gray-400'
-                        }`}>
-                          {tab.description}
-                        </span>
-                      </div>
-                    </motion.button>
-                  ))}
-                </>
-              )}
+              {/* Tasks tab */}
+              <motion.button
+                key={tasksTab.id}
+                onClick={() => onViewChange(tasksTab.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  currentView === tasksTab.id
+                    ? 'bg-red-600 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span>{tasksTab.label}</span>
+                  <span className={`text-xs ${
+                    currentView === tasksTab.id ? 'text-red-200' : 'text-gray-400'
+                  }`}>
+                    {tasksTab.description}
+                  </span>
+                </div>
+              </motion.button>
+              
+              {/* Clients tab */}
+              <motion.button
+                key={clientsTab.id}
+                onClick={() => onViewChange(clientsTab.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  currentView === clientsTab.id
+                    ? 'bg-red-600 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span>{clientsTab.label}</span>
+                  <span className={`text-xs ${
+                    currentView === clientsTab.id ? 'text-red-200' : 'text-gray-400'
+                  }`}>
+                    {clientsTab.description}
+                  </span>
+                </div>
+              </motion.button>
+              
+              {/* AI Assistant tab */}
+              <motion.button
+                key={assistantTab.id}
+                onClick={() => onViewChange(assistantTab.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                  currentView === assistantTab.id
+                    ? 'bg-red-600 text-white shadow-md'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center">
+                  <span>{assistantTab.label}</span>
+                  <span className={`text-xs ${
+                    currentView === assistantTab.id ? 'text-red-200' : 'text-gray-400'
+                  }`}>
+                    {assistantTab.description}
+                  </span>
+                </div>
+              </motion.button>
             </div>
           </motion.div>
 

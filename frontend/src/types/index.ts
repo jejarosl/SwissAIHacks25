@@ -26,6 +26,7 @@ export interface Task {
   confidenceScore?: number;
   evidence?: string;
   category: string;
+  meetingId?: string;
 }
 
 export interface RiskFlag {
@@ -55,6 +56,8 @@ export interface Document {
 export type ViewMode = 'prep' | 'live' | 'post';
 
 export type ViewMode = 'dashboard' | 'prep' | 'live' | 'post';
+
+export type ViewMode = 'dashboard' | 'tasks' | 'clients' | 'assistant' | 'prep' | 'live' | 'journey' | 'post';
 
 export interface CalendarEvent {
   id: string;

@@ -14,7 +14,8 @@ import VoiceChat from './VoiceChat';
 import { VoiceNote } from '../utils/voiceUtils';
 
 const PostMeetingWorkspace: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>(mockTasks);
+  const currentMeetingId = 'meeting-123'; // This would come from props or context
+  const [tasks, setTasks] = useState<Task[]>(mockTasks.filter(task => task.meetingId === currentMeetingId));
   const [documents] = useState<Document[]>(mockDocuments);
   const [voiceNotes, setVoiceNotes] = useState<VoiceNote[]>([]);
   const [language, setLanguage] = useState('English');
@@ -34,16 +35,14 @@ const PostMeetingWorkspace: React.FC = () => {
   const handleDragEnd = (result: any) => {
     if (!result.destination) return;
 
-    const { source, destination, draggableId } = result;
+    const { destination, draggableId } = result;
     
-    if (source.droppableId !== destination.droppableId) {
-      const newTasks = tasks.map(task => 
-        task.id === draggableId 
-          ? { ...task, status: destination.droppableId as Task['status'] }
-          : task
-      );
-      setTasks(newTasks);
-    }
+    const newTasks = tasks.map(task => 
+      task.id === draggableId 
+        ? { ...task, status: destination.droppableId as Task['status'] }
+        : task
+    );
+    setTasks(newTasks);
   };
 
   const handleTaskApproval = (taskId: string, approved: boolean) => {
@@ -264,7 +263,7 @@ const PostMeetingWorkspace: React.FC = () => {
             <div className="flex items-center justify-between mb-6">
               <h3 className="font-semibold text-gray-900">Task Management Board</h3>
               <div className="text-sm text-gray-500">
-                {tasks.length} tasks identified from meeting
+                {tasks.length} tasks from this meeting
               </div>
             </div>
 

@@ -104,7 +104,8 @@ export const mockTasks: Task[] = [
     status: 'todo',
     confidenceScore: 0.92,
     evidence: 'Let\'s schedule a follow-up meeting to discuss the tax implications...',
-    category: 'Scheduling'
+    category: 'Scheduling',
+    meetingId: 'meeting-123'
   },
   {
     id: '2',
@@ -114,7 +115,8 @@ export const mockTasks: Task[] = [
     status: 'in-progress',
     confidenceScore: 0.95,
     evidence: 'I\'ll prepare a comprehensive ESG proposal by Friday.',
-    category: 'Investment'
+    category: 'Investment',
+    meetingId: 'meeting-123'
   },
   {
     id: '3',
@@ -124,7 +126,8 @@ export const mockTasks: Task[] = [
     status: 'todo',
     confidenceScore: 0.87,
     evidence: 'We should look at diversifying beyond tech sector.',
-    category: 'Analysis'
+    category: 'Analysis',
+    meetingId: 'meeting-123'
   },
   {
     id: '4',
@@ -134,6 +137,147 @@ export const mockTasks: Task[] = [
     status: 'done',
     confidenceScore: 0.91,
     evidence: 'Please update the risk questionnaire based on today\'s discussion.',
+    category: 'Documentation',
+    meetingId: 'meeting-123'
+  },
+  {
+    id: '5',
+    description: 'Prepare Q3 performance analysis for Richardson Family',
+    owner: 'Emma Thompson',
+    dueDate: '2025-09-01',
+    status: 'todo',
+    confidenceScore: 0.89,
+    evidence: 'We need to analyze the Q3 performance before the quarterly review meeting.',
+    category: 'Analysis'
+  },
+  {
+    id: '6',
+    description: 'Research sustainable investment options for ESG seminar',
+    owner: 'ESG Specialist',
+    dueDate: '2025-09-03',
+    status: 'in-progress',
+    confidenceScore: 0.93,
+    evidence: 'I want to explore more ESG investment opportunities for the presentation.',
+    category: 'Research'
+  },
+  {
+    id: '7',
+    description: 'Complete KYC documentation for Taylor Holdings onboarding',
+    owner: 'Emma Thompson',
+    dueDate: '2025-09-06',
+    status: 'todo',
+    confidenceScore: 0.96,
+    evidence: 'All KYC documents must be completed before the onboarding meeting.',
+    category: 'Documentation'
+  },
+  {
+    id: '8',
+    description: 'Analyze market trends for September outlook call',
+    owner: 'Research Team',
+    dueDate: '2025-09-09',
+    status: 'in-progress',
+    confidenceScore: 0.88,
+    evidence: 'We need comprehensive market analysis for the monthly call.',
+    category: 'Research'
+  },
+  {
+    id: '9',
+    description: 'Draft trust restructuring proposal for Morrison Family',
+    owner: 'Estate Specialist',
+    dueDate: '2025-09-10',
+    status: 'todo',
+    confidenceScore: 0.94,
+    evidence: 'Please prepare a detailed trust restructuring plan.',
+    category: 'Legal'
+  },
+  {
+    id: '10',
+    description: 'Update compliance documentation for quarterly review',
+    owner: 'Compliance Officer',
+    dueDate: '2025-09-13',
+    status: 'done',
+    confidenceScore: 0.97,
+    evidence: 'All compliance documents need to be current for the review.',
+    category: 'Compliance'
+  },
+  {
+    id: '11',
+    description: 'Research alternative investment options for Park Family',
+    owner: 'Alternative Investments Specialist',
+    dueDate: '2025-09-16',
+    status: 'todo',
+    confidenceScore: 0.91,
+    evidence: 'We discussed exploring private equity opportunities.',
+    category: 'Investment'
+  },
+  {
+    id: '12',
+    description: 'Prepare tax optimization strategies presentation',
+    owner: 'Tax Planning Team',
+    dueDate: '2025-09-18',
+    status: 'in-progress',
+    confidenceScore: 0.90,
+    evidence: 'Year-end tax planning strategies need to be ready.',
+    category: 'Tax Planning'
+  },
+  {
+    id: '13',
+    description: 'Create corporate wealth management proposal for Stevens Corporation',
+    owner: 'Corporate Banking Specialist',
+    dueDate: '2025-09-20',
+    status: 'todo',
+    confidenceScore: 0.95,
+    evidence: 'We need a comprehensive corporate wealth management solution.',
+    category: 'Business Development'
+  },
+  {
+    id: '14',
+    description: 'Review Thompson Family Trust performance metrics',
+    owner: 'Emma Thompson',
+    dueDate: '2025-09-23',
+    status: 'done',
+    confidenceScore: 0.86,
+    evidence: 'Monthly trust performance review is scheduled.',
+    category: 'Analysis'
+  },
+  {
+    id: '15',
+    description: 'Prepare dynasty trust optimization analysis for Roberts Family',
+    owner: 'Trust Specialist',
+    dueDate: '2025-09-26',
+    status: 'in-progress',
+    confidenceScore: 0.92,
+    evidence: 'Multi-generational wealth transfer needs detailed analysis.',
+    category: 'Estate Planning'
+  },
+  {
+    id: '16',
+    description: 'Compile Q4 market outlook for Garcia Holdings review',
+    owner: 'Emma Thompson',
+    dueDate: '2025-09-28',
+    status: 'todo',
+    confidenceScore: 0.88,
+    evidence: 'Q4 outlook discussion was mentioned in the agenda.',
+    category: 'Analysis'
+  },
+  {
+    id: '17',
+    description: 'Schedule follow-up meetings for all September client reviews',
+    owner: 'Emma Thompson',
+    dueDate: '2025-09-30',
+    status: 'todo',
+    confidenceScore: 0.85,
+    evidence: 'Several clients mentioned need for follow-up discussions.',
+    category: 'Scheduling'
+  },
+  {
+    id: '18',
+    description: 'Update client database with September meeting outcomes',
+    owner: 'Emma Thompson',
+    dueDate: '2025-10-01',
+    status: 'todo',
+    confidenceScore: 0.83,
+    evidence: 'All meeting notes need to be documented in the system.',
     category: 'Documentation'
   }
 ];
@@ -179,7 +323,7 @@ inFiveDays.setDate(today.getDate() + 5);
 
 const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-export const mockCalendarEvents: CalendarEvent[] = [
+const initialMeetings: CalendarEvent[] = [
   // TODAY'S MEETINGS (3 total)
   {
     id: '1',
@@ -451,4 +595,360 @@ export const mockCalendarEvents: CalendarEvent[] = [
     hasPrep: true,
     hasDocuments: true
   }
+  
 ];
+
+// Add more meetings for the rest of the week
+const nextWeekStart = new Date(today);
+nextWeekStart.setDate(today.getDate() + 7);
+const twoWeeksOut = new Date(today);
+twoWeeksOut.setDate(today.getDate() + 14);
+
+// September 2025 meetings
+const septemberMeetings: CalendarEvent[] = [
+  {
+    id: 'sept-1',
+    title: 'Q3 Portfolio Review - Richardson Family',
+    type: 'meeting',
+    format: 'in-person',
+    date: '2025-09-03',
+    time: '10:00',
+    duration: 120,
+    participants: [
+      { id: 's1', name: 'Mark Richardson', role: 'Client', email: 'mark.richardson@email.com', isAdvisor: false },
+      { id: 's2', name: 'Linda Richardson', role: 'Co-Client', email: 'linda.richardson@email.com', isAdvisor: false },
+      { id: 's3', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Executive Conference Room',
+    description: 'Quarterly review of investment performance and strategy adjustments',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-2',
+    title: 'Virtual ESG Investment Seminar',
+    type: 'presentation',
+    format: 'video',
+    date: '2025-09-05',
+    time: '14:30',
+    duration: 90,
+    participants: [
+      { id: 's4', name: 'Multiple Clients', role: 'ESG Investors', email: 'esg.clients@email.com', isAdvisor: false },
+      { id: 's5', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's6', name: 'ESG Specialist', role: 'Product Expert', email: 'esg.expert@ubs.com', isAdvisor: true }
+    ],
+    status: 'confirmed',
+    location: 'Zoom Webinar',
+    description: 'Sustainable investing trends and new ESG product offerings',
+    priority: 'medium',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-3',
+    title: 'High Net Worth Client Onboarding - Taylor Holdings',
+    type: 'meeting',
+    format: 'in-person',
+    date: '2025-09-08',
+    time: '11:00',
+    duration: 150,
+    participants: [
+      { id: 's7', name: 'Alexander Taylor', role: 'Client', email: 'alexander.taylor@email.com', isAdvisor: false },
+      { id: 's8', name: 'Victoria Taylor', role: 'Co-Client', email: 'victoria.taylor@email.com', isAdvisor: false },
+      { id: 's9', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's10', name: 'Private Banking Specialist', role: 'Wealth Advisor', email: 'pb.specialist@ubs.com', isAdvisor: true }
+    ],
+    status: 'confirmed',
+    location: 'Private Client Suite',
+    description: 'Comprehensive onboarding for $50M+ portfolio management',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-4',
+    title: 'Monthly Market Analysis Call',
+    type: 'call',
+    format: 'phone',
+    date: '2025-09-10',
+    time: '08:30',
+    duration: 45,
+    participants: [
+      { id: 's11', name: 'Research Team', role: 'Market Analysts', email: 'research@ubs.com', isAdvisor: true },
+      { id: 's12', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Conference Call',
+    description: 'September market outlook and investment opportunities',
+    priority: 'medium',
+    hasPrep: false,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-5',
+    title: 'Trust & Estate Planning - Morrison Family',
+    type: 'meeting',
+    format: 'video',
+    date: '2025-09-12',
+    time: '15:00',
+    duration: 105,
+    participants: [
+      { id: 's13', name: 'Richard Morrison', role: 'Client', email: 'richard.morrison@email.com', isAdvisor: false },
+      { id: 's14', name: 'Patricia Morrison', role: 'Co-Client', email: 'patricia.morrison@email.com', isAdvisor: false },
+      { id: 's15', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's16', name: 'Estate Specialist', role: 'Legal Advisor', email: 'estate.specialist@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Microsoft Teams',
+    description: 'Complex estate planning and generational wealth transfer',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-6',
+    title: 'Compliance Review Meeting',
+    type: 'review',
+    format: 'in-person',
+    date: '2025-09-15',
+    time: '09:00',
+    duration: 75,
+    participants: [
+      { id: 's17', name: 'Compliance Officer', role: 'Compliance', email: 'compliance@ubs.com', isAdvisor: true },
+      { id: 's18', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Compliance Office',
+    description: 'Quarterly compliance review and regulatory updates',
+    priority: 'medium',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-7',
+    title: 'Alternative Investments Consultation - Park Family',
+    type: 'meeting',
+    format: 'in-person',
+    date: '2025-09-18',
+    time: '13:30',
+    duration: 90,
+    participants: [
+      { id: 's19', name: 'Daniel Park', role: 'Client', email: 'daniel.park@email.com', isAdvisor: false },
+      { id: 's20', name: 'Jennifer Park', role: 'Co-Client', email: 'jennifer.park@email.com', isAdvisor: false },
+      { id: 's21', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's22', name: 'Alternative Investments Specialist', role: 'Product Specialist', email: 'alt.invest@ubs.com', isAdvisor: true }
+    ],
+    status: 'confirmed',
+    location: 'Client Meeting Room B',
+    description: 'Private equity and hedge fund investment opportunities',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-8',
+    title: 'Tax Planning Strategy Call',
+    type: 'call',
+    format: 'video',
+    date: '2025-09-20',
+    time: '10:30',
+    duration: 60,
+    participants: [
+      { id: 's23', name: 'Tax Planning Team', role: 'Tax Specialists', email: 'tax.team@ubs.com', isAdvisor: true },
+      { id: 's24', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Zoom Meeting',
+    description: 'Year-end tax planning strategies and optimization',
+    priority: 'medium',
+    hasPrep: false,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-9',
+    title: 'New Client Presentation - Stevens Corporation',
+    type: 'presentation',
+    format: 'in-person',
+    date: '2025-09-22',
+    time: '14:00',
+    duration: 120,
+    participants: [
+      { id: 's25', name: 'CEO Stevens Corp', role: 'Prospect', email: 'ceo@stevens.corp', isAdvisor: false },
+      { id: 's26', name: 'CFO Stevens Corp', role: 'Prospect', email: 'cfo@stevens.corp', isAdvisor: false },
+      { id: 's27', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's28', name: 'Corporate Banking Specialist', role: 'Product Specialist', email: 'corp.banking@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Executive Boardroom',
+    description: 'Corporate wealth management and executive compensation solutions',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-10',
+    title: 'Client Check-in - Thompson Family Trust',
+    type: 'call',
+    format: 'video',
+    date: '2025-09-25',
+    time: '11:00',
+    duration: 45,
+    participants: [
+      { id: 's29', name: 'William Thompson', role: 'Client', email: 'william.thompson@email.com', isAdvisor: false },
+      { id: 's30', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'confirmed',
+    location: 'Teams Call',
+    description: 'Monthly trust performance review and updates',
+    priority: 'low',
+    hasPrep: false,
+    hasDocuments: false
+  },
+  {
+    id: 'sept-11',
+    title: 'Wealth Transfer Planning - Roberts Dynasty Trust',
+    type: 'meeting',
+    format: 'in-person',
+    date: '2025-09-28',
+    time: '15:30',
+    duration: 135,
+    participants: [
+      { id: 's31', name: 'George Roberts', role: 'Client', email: 'george.roberts@email.com', isAdvisor: false },
+      { id: 's32', name: 'Elizabeth Roberts', role: 'Co-Client', email: 'elizabeth.roberts@email.com', isAdvisor: false },
+      { id: 's33', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+      { id: 's34', name: 'Trust Specialist', role: 'Estate Planning Expert', email: 'trust.specialist@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'Private Advisory Suite',
+    description: 'Multi-generational wealth transfer and dynasty trust optimization',
+    priority: 'high',
+    hasPrep: true,
+    hasDocuments: true
+  },
+  {
+    id: 'sept-12',
+    title: 'Monthly Portfolio Review - Garcia Holdings',
+    type: 'review',
+    format: 'video',
+    date: '2025-09-30',
+    time: '16:00',
+    duration: 60,
+    participants: [
+      { id: 's35', name: 'Carlos Garcia', role: 'Client', email: 'carlos.garcia@email.com', isAdvisor: false },
+      { id: 's36', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+    ],
+    status: 'scheduled',
+    location: 'WebEx Meeting',
+    description: 'September performance review and Q4 outlook',
+    priority: 'medium',
+    hasPrep: true,
+    hasDocuments: true
+  }
+];
+
+// Add additional meetings spread across the next two weeks
+const additionalMeetings: CalendarEvent[] = [
+    {
+      id: '14',
+      title: 'Client Onboarding - Smith Holdings',
+      type: 'meeting',
+      format: 'in-person',
+      date: formatDate(tomorrow),
+      time: '16:30',
+      duration: 60,
+      participants: [
+        { id: '40', name: 'John Smith', role: 'Client', email: 'john.smith@email.com', isAdvisor: false },
+        { id: '41', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+      ],
+      status: 'confirmed',
+      location: 'Client Suite A',
+      description: 'Initial onboarding session for new high-net-worth client',
+      priority: 'high',
+      hasPrep: true,
+      hasDocuments: true
+    },
+    {
+      id: '15',
+      title: 'Quarterly Strategy Review',
+      type: 'meeting',
+      format: 'video',
+      date: formatDate(inTwoDays),
+      time: '09:30',
+      duration: 90,
+      participants: [
+        { id: '42', name: 'Regional Team', role: 'Advisory Team', email: 'team@ubs.com', isAdvisor: true },
+        { id: '43', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+      ],
+      status: 'scheduled',
+      location: 'Teams Meeting',
+      description: 'Review Q1 performance and set Q2 objectives',
+      priority: 'medium',
+      hasPrep: true,
+      hasDocuments: true
+    },
+    {
+      id: '16',
+      title: 'Wealth Structuring Consultation - Brown Family',
+      type: 'meeting',
+      format: 'in-person',
+      date: formatDate(inThreeDays),
+      time: '11:00',
+      duration: 120,
+      participants: [
+        { id: '44', name: 'Robert Brown', role: 'Client', email: 'robert.brown@email.com', isAdvisor: false },
+        { id: '45', name: 'Susan Brown', role: 'Co-Client', email: 'susan.brown@email.com', isAdvisor: false },
+        { id: '46', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+        { id: '47', name: 'Tax Specialist', role: 'Tax Advisor', email: 'tax@ubs.com', isAdvisor: true }
+      ],
+      status: 'confirmed',
+      location: 'Executive Board Room',
+      description: 'Complex wealth structuring and tax optimization discussion',
+      priority: 'high',
+      hasPrep: true,
+      hasDocuments: true
+    },
+    {
+      id: '17',
+      title: 'Market Outlook Call with Research Team',
+      type: 'call',
+      format: 'phone',
+      date: formatDate(inFourDays),
+      time: '08:00',
+      duration: 45,
+      participants: [
+        { id: '48', name: 'Research Analyst', role: 'Market Research', email: 'research@ubs.com', isAdvisor: true },
+        { id: '49', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true }
+      ],
+      status: 'scheduled',
+      location: 'Conference Call',
+      description: 'Weekly market analysis and investment opportunities',
+      priority: 'low',
+      hasPrep: false,
+      hasDocuments: true
+    },
+    {
+      id: '18',
+      title: 'Alternative Investments Presentation',
+      type: 'presentation',
+      format: 'video',
+      date: formatDate(inFiveDays),
+      time: '14:30',
+      duration: 75,
+      participants: [
+        { id: '50', name: 'Multiple Clients', role: 'HNW Clients', email: 'clients@email.com', isAdvisor: false },
+        { id: '51', name: 'Emma Thompson', role: 'Senior Advisor', email: 'emma.thompson@ubs.com', isAdvisor: true },
+        { id: '52', name: 'Alternative Investments Specialist', role: 'Product Specialist', email: 'alt.invest@ubs.com', isAdvisor: true }
+      ],
+      status: 'scheduled',
+      location: 'Zoom Webinar',
+      description: 'Presentation on private equity and hedge fund opportunities',
+      priority: 'medium',
+      hasPrep: true,
+      hasDocuments: true
+    }
+  ];
+  
+
+export const mockCalendarEvents: CalendarEvent[] = [...initialMeetings, ...additionalMeetings, ...septemberMeetings];

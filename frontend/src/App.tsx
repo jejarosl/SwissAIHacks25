@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navigation from './components/Navigation';
+import MeetingSubmenu from './components/MeetingSubmenu';
 import Dashboard from './components/Dashboard';
 import PreMeetingDashboard from './components/PreMeetingDashboard';
 import LiveMeetingView from './components/LiveMeetingView';
+import ClientJourney from './components/ClientJourney';
 import PostMeetingWorkspace from './components/PostMeetingWorkspace';
+import TasksView from './components/TasksView';
+import ClientDatabase from './components/ClientDatabase';
+import AIAssistant from './components/AIAssistant';
 import { ViewMode, CalendarEvent } from './types';
 
 function App() {
@@ -16,6 +21,8 @@ function App() {
     setSelectedEvent(event);
     setCurrentView('prep'); // Default to prep view when event is selected
   };
+
+  const isMeetingView = ['prep', 'live', 'post'].includes(currentView);
 
   const renderCurrentView = () => {
     const viewVariants = {
@@ -36,6 +43,45 @@ function App() {
             transition={{ duration: 0.3 }}
           >
             <Dashboard onEventSelect={handleEventSelect} />
+          </motion.div>
+        );
+      case 'tasks':
+        return (
+          <motion.div
+            key="tasks"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <TasksView />
+          </motion.div>
+        );
+      case 'clients':
+        return (
+          <motion.div
+            key="clients"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <ClientDatabase />
+          </motion.div>
+        );
+      case 'assistant':
+        return (
+          <motion.div
+            key="assistant"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <AIAssistant />
           </motion.div>
         );
       case 'prep':
@@ -64,6 +110,19 @@ function App() {
             <LiveMeetingView />
           </motion.div>
         );
+      case 'journey':
+        return (
+          <motion.div
+            key="journey"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <ClientJourney />
+          </motion.div>
+        );
       case 'post':
         return (
           <motion.div
@@ -89,6 +148,16 @@ function App() {
         onViewChange={setCurrentView}
         notificationCount={notificationCount}
       />
+      
+      {/* Meeting Submenu - only show when in meeting views */}
+      {isMeetingView && selectedEvent && (
+        <MeetingSubmenu
+          currentView={currentView}
+          onViewChange={setCurrentView}
+          meetingTitle={selectedEvent.title}
+          meetingTime={`${new Date(selectedEvent.date).toLocaleDateString()} at ${selectedEvent.time}`}
+        />
+      )}
       
       <AnimatePresence mode="wait">
         {renderCurrentView()}
