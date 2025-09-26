@@ -8,3 +8,5 @@ pillow>=8.0.0
 easyocr>=1.4.0
 openai>=0.27.0
 huggingface_hub>=0.16.0
+pyaudio>=0.2.11
+wave
