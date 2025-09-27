@@ -1,0 +1,35 @@
+SwissAIHacks25 - Task Extraction Analysis Report
+============================================================
+
+🏆 PERFORMANCE SUMMARY
+------------------------------
+🥇 GPT-4o: 0.880
+   Apertus: 0.311
+
+📈 Best model advantage: 0.569 points
+
+📊 DATASET STATISTICS
+------------------------------
+Test conversations: 5
+Total ground truth tasks: 9
+Average tasks per conversation: 1.8
+
+Task type distribution:
+  plan_contact: 1
+  schedule_meeting: 3
+  update_contact_info_non_postal: 1
+  update_contact_info_postal_address: 1
+  update_kyc_origin_of_assets: 1
+  update_kyc_purpose_of_businessrelation: 2
+
+🤖 GPT-4O DETAILS
+------------------------------
+Score: 0.880
+Total predictions: 9
+Duplicates removed: 0
+
+🤖 APERTUS DETAILS
+------------------------------
+Score: 0.311
+Total predictions: 15
+Duplicates removed: 1

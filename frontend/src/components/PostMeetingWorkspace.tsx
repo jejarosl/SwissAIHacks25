@@ -33,9 +33,21 @@ const PostMeetingWorkspace: React.FC = () => {
   };
 
   const handleDragEnd = (result: any) => {
-    if (!result.destination) return;
+    console.log('Drag end result:', result); // Debug logging
+    
+    if (!result.destination) {
+      console.log('No destination - drag cancelled');
+      return;
+    }
 
-    const { destination, draggableId } = result;
+    const { destination, draggableId, source } = result;
+    
+    // If dropped in the same position, do nothing
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+    
+    console.log(`Moving task ${draggableId} from ${source.droppableId} to ${destination.droppableId}`);
     
     const newTasks = tasks.map(task => 
       task.id === draggableId 
@@ -296,16 +308,19 @@ const PostMeetingWorkspace: React.FC = () => {
                             {columnTasks.map((task, index) => (
                               <Draggable key={task.id} draggableId={task.id} index={index}>
                                 {(provided, snapshot) => (
-                                  <motion.div
+                                  <div
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
-                                    initial={{ opacity: 0, scale: 0.8 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.8 }}
                                     className={`p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all ${
-                                      snapshot.isDragging ? 'shadow-lg rotate-2' : ''
+                                      snapshot.isDragging ? 'shadow-lg rotate-2 scale-105' : ''
                                     }`}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      transform: snapshot.isDragging 
+                                        ? `${provided.draggableProps.style?.transform} rotate(2deg)` 
+                                        : provided.draggableProps.style?.transform
+                                    }}
                                   >
                                     <div className="space-y-3">
                                       <div className="flex items-start justify-between">
@@ -358,7 +373,7 @@ const PostMeetingWorkspace: React.FC = () => {
                                         )}
                                       </div>
                                     </div>
-                                  </motion.div>
+                                  </div>
                                 )}
                               </Draggable>
                             ))}

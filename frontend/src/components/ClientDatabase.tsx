@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Filter, Plus, User, Phone, Mail, MapPin, Calendar, DollarSign, TrendingUp, Star, MoreHorizontal, Eye, CreditCard as Edit, Archive, Users, Building, CreditCard } from 'lucide-react';
+import { Search, Filter, Plus, User, Phone, Mail, MapPin, Calendar, DollarSign, TrendingUp, Star, MoreHorizontal, Eye, CreditCard as Edit, Archive, Users, Building, CreditCard, Clock, BarChart3 } from 'lucide-react';
+import { mockCalendarEvents } from '../utils/mockData';
 
 interface Client {
   id: string;
@@ -17,6 +18,14 @@ interface Client {
   location: string;
   joinDate: string;
   notes?: string;
+}
+
+interface ClientEngagement {
+  totalMeetings: number;
+  totalMinutes: number;
+  lastMeeting: string;
+  avgMeetingDuration: number;
+  preferredFormat: string;
 }
 
 const mockClients: Client[] = [
@@ -146,6 +155,33 @@ const ClientDatabase: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'prospect'>('all');
   const [typeFilter, setTypeFilter] = useState<'all' | 'individual' | 'family' | 'corporate'>('all');
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  const getClientEngagement = (clientName: string): ClientEngagement => {
+    // Find meetings for this client
+    const clientMeetings = mockCalendarEvents.filter(event => 
+      event.title.toLowerCase().includes(clientName.split(' ')[0].toLowerCase()) ||
+      event.participants.some(p => p.name.toLowerCase().includes(clientName.split(' ')[0].toLowerCase()))
+    );
+
+    const totalMinutes = clientMeetings.reduce((sum, meeting) => sum + meeting.duration, 0);
+    const avgDuration = clientMeetings.length > 0 ? Math.round(totalMinutes / clientMeetings.length) : 0;
+    
+    // Find most common meeting format
+    const formatCounts = clientMeetings.reduce((acc, meeting) => {
+      acc[meeting.format] = (acc[meeting.format] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const preferredFormat = Object.entries(formatCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || 'in-person';
+    
+    return {
+      totalMeetings: clientMeetings.length,
+      totalMinutes,
+      lastMeeting: clientMeetings[0]?.date || '',
+      avgMeetingDuration: avgDuration,
+      preferredFormat
+    };
+  };
 
   const filteredClients = clients.filter(client => {
     const matchesSearch = searchQuery === '' || 
@@ -298,9 +334,19 @@ const ClientDatabase: React.FC = () => {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.02, y: -4 }}
-                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all cursor-pointer"
+                className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-all cursor-pointer relative"
                 onClick={() => setSelectedClient(client)}
               >
+                {/* Engagement Analytics Badge */}
+                {(() => {
+                  const engagement = getClientEngagement(client.name);
+                  return engagement.totalMeetings > 0 && (
+                    <div className="absolute top-4 right-4 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                      {engagement.totalMeetings} meetings • {Math.round(engagement.totalMinutes/60)}h
+                    </div>
+                  );
+                })()}
+
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center space-x-3">
                     <div className="p-2 bg-red-100 rounded-lg">
@@ -337,6 +383,28 @@ const ClientDatabase: React.FC = () => {
                     <MapPin className="h-4 w-4 text-gray-400" />
                     <span>{client.location}</span>
                   </div>
+                  
+                  {/* Advisor Engagement Metrics */}
+                  {(() => {
+                    const engagement = getClientEngagement(client.name);
+                    return engagement.totalMeetings > 0 && (
+                      <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                        <div className="flex items-center space-x-4 text-xs text-gray-500">
+                          <div className="flex items-center space-x-1">
+                            <Clock className="h-3 w-3" />
+                            <span>{engagement.totalMinutes}min total</span>
+                          </div>
+                          <div className="flex items-center space-x-1">
+                            <BarChart3 className="h-3 w-3" />
+                            <span>{engagement.avgMeetingDuration}min avg</span>
+                          </div>
+                        </div>
+                        <span className="text-xs font-medium text-blue-600 capitalize">
+                          {engagement.preferredFormat.replace('-', ' ')} preferred
+                        </span>
+                      </div>
+                    );
+                  })()}
                   
                   {client.portfolio > 0 && (
                     <div className="flex items-center justify-between pt-2 border-t border-gray-100">

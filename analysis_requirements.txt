@@ -1,0 +1,15 @@
+# SwissAIHacks25 Task Extraction Analysis Dependencies
+
+# Core dependencies
+openai>=1.0.0
+huggingface-hub>=0.19.0
+matplotlib>=3.7.0
+python-dotenv>=1.0.0
+
+# Optional: For enhanced error handling and logging
+requests>=2.31.0
+
+# Development dependencies (optional)
+# pytest>=7.0.0
+# black>=23.0.0
+# flake8>=6.0.0

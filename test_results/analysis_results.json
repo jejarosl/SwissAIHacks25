@@ -1,0 +1,13 @@
+{
+  "scores": {
+    "GPT-4o": 0.8800000000000001,
+    "Apertus": 0.3111111111111111
+  },
+  "ground_truth_count": 5,
+  "ground_truth_tasks_count": 9,
+  "duplicates_removed": {
+    "GPT-4o": 0,
+    "Apertus": 1
+  },
+  "test_conversations_count": 5
+}

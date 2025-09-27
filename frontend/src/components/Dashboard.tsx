@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, Users, MapPin, FileText, AlertCircle, ChevronLeft, ChevronRight, Plus, Filter, Search, Video, Phone, Presentation, FileCheck, Star, Send, Upload, CreditCard as Edit, UserPlus, TrendingUp, Bell } from 'lucide-react';
+import { Calendar, Clock, Users, MapPin, FileText, AlertCircle, ChevronLeft, ChevronRight, Plus, Filter, Search, Video, Phone, Presentation, FileCheck, Star, Send, Upload, CreditCard as Edit, UserPlus, TrendingUp, Bell, BarChart3 } from 'lucide-react';
 import { CalendarEvent, ViewMode } from '../types';
 import { mockCalendarEvents, mockTasks } from '../utils/mockData';
 
@@ -164,150 +164,61 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
         </div>
       </div>
 
-      {/* Quick Actions Panel */}
+      {/* Daily Accountability - Compact */}
       <motion.div 
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6"
+        className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6"
       >
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-          <p className="text-sm text-gray-500">Common advisor workflows</p>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="text-base font-semibold text-gray-900">Daily Accountability</h3>
+            <p className="text-xs text-gray-500">Your client engagement metrics</p>
+          </div>
+          <div className="text-right">
+            <div className="text-sm font-medium text-gray-900">
+              {Math.round(mockCalendarEvents.reduce((sum, event) => sum + event.duration, 0) / 60)}h total this month
+            </div>
+            <div className="text-xs text-gray-500">Across {mockCalendarEvents.length} meetings</div>
+          </div>
         </div>
 
-        {/* Primary Actions Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-4">
-          {[
-            { icon: Plus, label: 'Schedule Meeting', color: 'bg-red-600 hover:bg-red-700', action: () => console.log('Schedule meeting') },
-            { icon: Edit, label: 'Create Task', color: 'bg-blue-600 hover:bg-blue-700', action: () => console.log('Create task') },
-            { icon: UserPlus, label: 'Add Client', color: 'bg-green-600 hover:bg-green-700', action: () => console.log('Add client') },
-            { icon: Upload, label: 'Upload Document', color: 'bg-purple-600 hover:bg-purple-700', action: () => console.log('Upload document') },
-            { icon: Send, label: 'Send Email', color: 'bg-orange-600 hover:bg-orange-700', action: () => console.log('Send email') },
-            { icon: TrendingUp, label: 'Generate Report', color: 'bg-indigo-600 hover:bg-indigo-700', action: () => console.log('Generate report') }
-          ].map((action, index) => (
-            <motion.button
-              key={action.label}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 + index * 0.1 }}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={action.action}
-              className={`flex flex-col items-center space-y-2 p-4 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${action.color}`}
-            >
-              <action.icon className="h-6 w-6" />
-              <span className="text-sm font-medium text-center">{action.label}</span>
-            </motion.button>
-          ))}
-        </div>
-
-        {/* Secondary Actions */}
-        <div className="flex flex-wrap gap-2">
-          {[
-            'Add Note',
-            'Set Reminder', 
-            'View Documents',
-            'Contact Client'
-          ].map((action) => (
-            <motion.button
-              key={action}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              {action}
-            </motion.button>
-          ))}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="bg-blue-50 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-blue-600">{events.filter(e => new Date(e.date).toDateString() === today.toDateString()).length}</div>
+            <div className="text-xs font-medium text-blue-800">Today's Meetings</div>
+            <div className="text-xs text-blue-600">
+              {events.filter(e => new Date(e.date).toDateString() === today.toDateString()).reduce((sum, e) => sum + e.duration, 0)}min scheduled
+            </div>
+          </div>
+          <div className="bg-green-50 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-green-600">
+              31h
+            </div>
+            <div className="text-xs font-medium text-green-800">This Week</div>
+            <div className="text-xs text-green-600">{events.length} meetings total</div>
+          </div>
+          <div className="bg-purple-50 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-purple-600">
+              15m
+            </div>
+            <div className="text-xs font-medium text-purple-800">Avg Duration</div>
+            <div className="text-xs text-purple-600">Per meeting</div>
+          </div>
+          <div className="bg-orange-50 rounded-lg p-3 text-center">
+            <div className="text-xl font-bold text-orange-600">
+              45
+            </div>
+            <div className="text-xs font-medium text-orange-800">Remote Meetings</div>
+            <div className="text-xs text-orange-600">
+              82% of total
+            </div>
+          </div>
         </div>
       </motion.div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Statistics Cards */}
-        <div className="xl:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Today's Meetings</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {events.filter(event => {
-                    const eventDate = new Date(event.date);
-                    return eventDate.toDateString() === today.toDateString();
-                  }).length}
-                </p>
-              </div>
-              <div className="p-3 bg-red-100 rounded-lg">
-                <Calendar className="h-6 w-6 text-red-600" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">This Week</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  {events.filter(event => {
-                    const eventDate = new Date(event.date);
-                    const weekStart = new Date(today);
-                    weekStart.setDate(today.getDate() - today.getDay());
-                    const weekEnd = new Date(weekStart);
-                    weekEnd.setDate(weekStart.getDate() + 6);
-                    return eventDate >= weekStart && eventDate <= weekEnd;
-                  }).length}
-                </p>
-              </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Clock className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Pending Tasks</p>
-                <p className="text-2xl font-bold text-orange-600">
-                  {mockTasks.filter(task => task.status === 'pending').length}
-                </p>
-              </div>
-              <div className="p-3 bg-orange-100 rounded-lg">
-                <FileText className="h-6 w-6 text-orange-600" />
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-xl shadow-sm border border-gray-200 p-6"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Clients</p>
-                <p className="text-2xl font-bold text-green-600">24</p>
-              </div>
-              <div className="p-3 bg-green-100 rounded-lg">
-                <Users className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </motion.div>
-        </div>
+    
 
         {/* Calendar View */}
         {viewMode === 'calendar' && (
@@ -421,7 +332,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
               </p>
             </div>
 
-            <div className="max-h-96 overflow-y-auto">
+            <div className="overflow-y-auto" style={{ height: 'calc(100vh - 640px)' }}>
               <div className="space-y-1 p-2">
                 {getUpcomingEvents().map((event, index) => {
                   const EventIcon = getEventTypeIcon(event.type);
@@ -495,7 +406,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
                           )}
                         </div>
 
-                        <div className="flex flex-col items-end space-y-2 ml-4">
+                        <div className="flex flex-col items-end space-y-2 ml-2">
                           <div className="flex items-center space-x-1">
                             {event.hasPrep && (
                               <div className="w-2 h-2 bg-blue-500 rounded-full" title="Has prep materials" />
@@ -523,6 +434,48 @@ const Dashboard: React.FC<DashboardProps> = ({ onEventSelect }) => {
           </motion.div>
         </div>
       </div>
+
+      {/* Quick Actions Panel */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4 mt-4"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
+          <p className="text-sm text-gray-500">Common advisor workflows</p>
+        </div>
+
+        {/* Primary Actions Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-4">
+          {[
+            { icon: Plus, label: 'Schedule Meeting', color: 'bg-slate-500 hover:bg-slate-600', action: () => console.log('Schedule meeting') },
+            { icon: Edit, label: 'Create Task', color: 'bg-blue-500 hover:bg-blue-600', action: () => console.log('Create task') },
+            { icon: UserPlus, label: 'Add Client', color: 'bg-emerald-500 hover:bg-emerald-600', action: () => console.log('Add client') },
+            { icon: Send, label: 'Send Email', color: 'bg-amber-500 hover:bg-amber-600', action: () => console.log('Send email') },
+            { icon: TrendingUp, label: 'Generate Report', color: 'bg-violet-500 hover:bg-violet-600', action: () => console.log('Generate report') }
+          ].map((action, index) => (
+            <motion.button
+              key={action.label}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={action.action}
+              className={`flex flex-col items-center space-y-2 p-4 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${action.color}`}
+            >
+              <action.icon className="h-6 w-6" />
+              <span className="text-sm font-medium text-center">{action.label}</span>
+            </motion.button>
+          ))}
+        </div>
+
+        
+      </motion.div>
+
+      
     </div>
   );
 };

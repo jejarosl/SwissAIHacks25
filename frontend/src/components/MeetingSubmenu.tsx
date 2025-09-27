@@ -44,6 +44,13 @@ const MeetingSubmenu: React.FC<MeetingSubmenuProps> = ({
       description: 'Follow-up & Tasks',
       icon: CheckSquare,
       color: 'text-orange-600'
+    },
+    { 
+      id: 'analytics' as ViewMode, 
+      label: 'Meeting Analytics', 
+      description: 'Performance & Insights',
+      icon: Clock,
+      color: 'text-indigo-600'
     }
   ];
 

@@ -59,6 +59,43 @@ export type ViewMode = 'dashboard' | 'prep' | 'live' | 'post';
 
 export type ViewMode = 'dashboard' | 'tasks' | 'clients' | 'assistant' | 'prep' | 'live' | 'journey' | 'post';
 
+export type ViewMode = 'dashboard' | 'tasks' | 'clients' | 'assistant' | 'prep' | 'live' | 'journey' | 'post' | 'analytics';
+
+export interface MeetingAnalytics {
+  id: string;
+  meetingId: string;
+  duration: number; // total minutes
+  sentimentBreakdown: {
+    happy: { percentage: number; minutes: number };
+    neutral: { percentage: number; minutes: number };
+    dissatisfied: { percentage: number; minutes: number };
+  };
+  silenceMetrics: {
+    totalSilenceMinutes: number;
+    silencePercentage: number;
+    longestSilenceDuration: number;
+    silenceFrequency: number;
+  };
+  engagementMetrics: {
+    speakingTime: { [participant: string]: number };
+    interruptionCount: number;
+    questionCount: number;
+    actionItemsGenerated: number;
+  };
+  communicationMetrics: {
+    wordsPerMinute: number;
+    totalWords: number;
+    vocabularyDiversity: number;
+    clarificationRequests: number;
+  };
+  outcomeMetrics: {
+    objectivesMet: number;
+    followUpTasks: number;
+    decisionsReached: number;
+    nextMeetingScheduled: boolean;
+  };
+}
+
 export interface CalendarEvent {
   id: string;
   title: string;

@@ -53,19 +53,70 @@ const PreMeetingDashboard: React.FC = () => {
             <div>
               <h4 className="font-medium text-gray-900 mb-3">Participants</h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {brief.participants.map((participant) => (
-                  <div key={participant.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
-                      participant.isAdvisor ? 'bg-red-600' : 'bg-blue-600'
-                    }`}>
-                      {participant.name.charAt(0)}
+                {brief.participants.map((participant) => {
+                  // Map participants to specific profile images
+                  const getProfileImage = (name: string, isAdvisor: boolean) => {
+                    console.log('Getting profile image for:', name, 'isAdvisor:', isAdvisor);
+                    // Use placeholder images that will definitely load for now
+                    // You can replace these with your actual images later
+                    if (isAdvisor) {
+                      // Emma Thompson -> female advisor, David Chen -> male advisor
+                      if (name === 'Emma Thompson') {
+                        console.log('Matched Emma Thompson');
+                        return 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face&auto=format&q=80';
+                      } else {
+                        console.log('Using male advisor image for:', name);
+                        return 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face&auto=format&q=80';
+                      }
+                    } else {
+                      // For clients, we can use generic avatars or the same pattern
+                      if (name.includes('Sarah')) {
+                        console.log('Matched Sarah');
+                        return 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face&auto=format&q=80';
+                      } else {
+                        console.log('Using male client image for:', name);
+                        return 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face&auto=format&q=80';
+                      }
+                    }
+                  };
+                  
+                  const profileImageUrl = getProfileImage(participant.name, participant.isAdvisor);
+                  
+                  return (
+                    <div key={participant.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                      <img 
+                        src={profileImageUrl}
+                        alt={participant.name}
+                        className={`w-16 h-16 rounded-full object-cover border-4 shadow-sm ${
+                          participant.isAdvisor ? 'border-red-500' : 'border-blue-500'
+                        }`}
+                        onError={(e) => {
+                          // Fallback to initials if image fails to load
+                          console.log('Image failed to load for:', participant.name, 'URL:', profileImageUrl);
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.nextElementSibling as HTMLDivElement;
+                          if (fallback) {
+                            fallback.style.display = 'flex';
+                            console.log('Showing fallback for:', participant.name);
+                          }
+                        }}
+                        onLoad={() => {
+                          console.log('Image loaded successfully for:', participant.name);
+                        }}
+                      />
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white text-lg font-medium shadow-sm border-4 ${
+                        participant.isAdvisor ? 'bg-red-600 border-red-500' : 'bg-blue-600 border-blue-500'
+                      }`} style={{ display: 'none' }}>
+                        {participant.name.charAt(0)}
+                      </div>
+                      <div>
+                        <div className="font-medium text-gray-900">{participant.name}</div>
+                        <div className="text-sm text-gray-500">{participant.role}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="font-medium text-gray-900">{participant.name}</div>
-                      <div className="text-sm text-gray-500">{participant.role}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

@@ -1,4 +1,5 @@
 import { MeetingBrief, Task, TranscriptEntry, Document, RiskFlag, CalendarEvent } from '../types';
+import { getAllExtractedTasks } from './transcriptParser';
 
 export const mockMeetingBrief: MeetingBrief = {
   id: '1',
@@ -279,7 +280,9 @@ export const mockTasks: Task[] = [
     confidenceScore: 0.83,
     evidence: 'All meeting notes need to be documented in the system.',
     category: 'Documentation'
-  }
+  },
+  // Add extracted tasks from real transcripts
+  ...getAllExtractedTasks()
 ];
 
 export const mockDocuments: Document[] = [

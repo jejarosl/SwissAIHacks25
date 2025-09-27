@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   MessageCircle, Send, Bot, User, Search, FileText, 
   Calendar, Users, TrendingUp, Clock, Lightbulb,
-  BookOpen, Shield, Globe, Cpu, Mic, Volume2
+  BookOpen, Shield, Globe, Cpu, Mic, Volume2, Database,
+  Languages, CheckSquare
 } from 'lucide-react';
+import { transcriptDatabase, searchTranscripts, getAllExtractedTasks } from '../utils/transcriptParser';
 
 interface ChatMessage {
   id: string;
@@ -65,25 +67,28 @@ const AIAssistant: React.FC = () => {
       ]
     },
     {
+      category: 'transcripts',
+      icon: Database,
+      color: 'bg-indigo-100 text-indigo-700',
+      questions: [
+        'What were the main topics discussed in recent client calls?',
+        'Show me all the KYC updates extracted from meeting transcripts',
+        'What inheritance cases have been processed recently?',
+        'Which clients needed card security assistance?'
+      ]
+    },
+    {
       category: 'analytics',
       icon: TrendingUp,
       color: 'bg-orange-100 text-orange-700',
       questions: [
-        'Which clients have underperforming portfolios that need attention?',
+        'Analyze patterns across all client conversation transcripts',
         'Show portfolio allocation trends across my client base',
-        'Identify upselling opportunities based on client profiles',
-        'What are the common themes in client feedback?'
+        'What are the common themes in recent client calls?',
+        'Identify upselling opportunities from conversation analysis'
       ]
     }
   ];
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,6 +124,46 @@ const AIAssistant: React.FC = () => {
 
   const generateResponse = (query: string): { content: string; category: ChatMessage['category']; sources: string[] } => {
     const lowerQuery = query.toLowerCase();
+
+    // Transcript and extracted tasks queries
+    if (lowerQuery.includes('transcript') || lowerQuery.includes('call') || lowerQuery.includes('conversation') || 
+        lowerQuery.includes('kyc') || lowerQuery.includes('inheritance') || lowerQuery.includes('card') || lowerQuery.includes('security')) {
+      
+      const relevantTranscripts = searchTranscripts(query);
+      const extractedTasks = getAllExtractedTasks();
+      
+      let response = `Based on recent client conversation transcripts, I found ${relevantTranscripts.length} relevant interactions:\n\n`;
+      
+      relevantTranscripts.forEach((transcript, index) => {
+        const langFlag = transcript.language === 'en' ? '🇺🇸' : transcript.language === 'fr' ? '🇫🇷' : '🇩🇪';
+        response += `**${index + 1}. ${transcript.title}** ${langFlag}\n`;
+        response += `${transcript.summary}\n`;
+        
+        if (transcript.extractedTasks.length > 0) {
+          response += `**Action Items Extracted:**\n`;
+          transcript.extractedTasks.forEach(task => {
+            response += `- ${task.description || task.task_type} (${Math.round((task.confidence || 0) * 100)}% confidence)\n`;
+          });
+        }
+        response += '\n';
+      });
+      
+      if (lowerQuery.includes('kyc') || lowerQuery.includes('inheritance')) {
+        const kycTasks = extractedTasks.filter(task => 
+          task.task_type.includes('kyc') || task.task_type.includes('origin_of_assets')
+        );
+        response += `**KYC & Asset Updates Summary:**\n`;
+        response += `- ${kycTasks.length} KYC-related tasks identified\n`;
+        response += `- Multiple inheritance cases requiring documentation\n`;
+        response += `- Asset origin verification needed for compliance\n`;
+      }
+      
+      return {
+        content: response,
+        category: 'meeting',
+        sources: ['Meeting Transcripts', 'Task Extraction System', 'Multi-language Processing']
+      };
+    }
 
     // Meeting-related queries
     if (lowerQuery.includes('meeting') || lowerQuery.includes('action item') || lowerQuery.includes('follow-up')) {
@@ -293,6 +338,34 @@ What specific area would you like to explore? I have access to your complete mee
                   </div>
                 );
               })}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h3 className="font-semibold text-gray-900 mb-4 flex items-center">
+              <Database className="h-5 w-5 mr-2 text-indigo-600" />
+              Real Transcript Data
+            </h3>
+            
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Processed Transcripts</span>
+                <span className="font-semibold text-gray-900">{transcriptDatabase.length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Extracted Tasks</span>
+                <span className="font-semibold text-orange-600">{getAllExtractedTasks().length}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">Languages</span>
+                <div className="flex items-center space-x-1">
+                  <span className="text-xs">🇺🇸🇫🇷🇩🇪</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-600">KYC Updates</span>
+                <span className="font-semibold text-blue-600">5</span>
+              </div>
             </div>
           </div>
 

@@ -10,6 +10,7 @@ import PostMeetingWorkspace from './components/PostMeetingWorkspace';
 import TasksView from './components/TasksView';
 import ClientDatabase from './components/ClientDatabase';
 import AIAssistant from './components/AIAssistant';
+import MeetingAnalytics from './components/MeetingAnalytics';
 import { ViewMode, CalendarEvent } from './types';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
     setCurrentView('prep'); // Default to prep view when event is selected
   };
 
-  const isMeetingView = ['prep', 'live', 'post'].includes(currentView);
+  const isMeetingView = ['prep', 'live', 'post', 'analytics'].includes(currentView);
 
   const renderCurrentView = () => {
     const viewVariants = {
@@ -134,6 +135,19 @@ function App() {
             transition={{ duration: 0.3 }}
           >
             <PostMeetingWorkspace />
+          </motion.div>
+        );
+      case 'analytics':
+        return (
+          <motion.div
+            key="analytics"
+            variants={viewVariants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.3 }}
+          >
+            <MeetingAnalytics />
           </motion.div>
         );
       default:
